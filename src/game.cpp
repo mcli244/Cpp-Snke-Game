@@ -1,12 +1,14 @@
 #include "game.h"
 #include <unistd.h>
+#include <iostream>
+using namespace std;
 
-Game::Game(void)
+Game::Game()
 {
+    Renderer *render = new Renderer(200, 200);
     Input *input = new Input();
-    Renderer *render = new Renderer(50, 50);
-    Map *map = new Map(50, 50);
-    Snake *snaker = new Snake(20, 20, 50, 50);
+    // Map *map = new Map(200, 200);
+    // Snake *snaker = new Snake(20, 20);
 }
 
 Game::~Game()
@@ -16,32 +18,62 @@ Game::~Game()
     delete render;
     delete input;
 }
+void Game::CtreatFood(Snake *_snaker, Map *_map)
+{
+    while (true) {
+        food = _map->CreatFood();
+        if(false == _snaker->IsOnBody(food))
+            break;
+    }
+}
 
 void Game::run(void)
 {
     SDL_Keycode key;
     int ret = -1;
-    SDL_Point food;
+    int cnt = 0;
+    int update_cnt = 100;
 
-    food = map->CreatFood();
+    Map *map = new Map(200, 200);
+    Snake *snaker = new Snake(20, 20, 500, 500);
+
+    CtreatFood(snaker, map);
+    cout << "food:("<<food.x <<","<< food.y << ")"<<endl;
     while(snaker->IsAlive())
     {
+
+        
         key = input->HandleInput();
-        // case 0:    p.y -= 1;    break;  // 上
-        // case 1:    p.y += 1;    break;  // 下
-        // case 2:    p.x -= 1;    break;  // 左
-        // case 3:    p.x += 1;    break;  // 右
         switch (key) {
-            case SDLK_UP:       snaker->SetDir(0); break;
-            case SDLK_DOWN:     snaker->SetDir(1); break;
-            case SDLK_LEFT:     snaker->SetDir(2); break;
-            case SDLK_RIGHT:    snaker->SetDir(3); break;
+            case SDLK_UP:       snaker->SetDir(Snake::Direction::kUp); break;
+            case SDLK_DOWN:     snaker->SetDir(Snake::Direction::kDown); break;
+            case SDLK_LEFT:     snaker->SetDir(Snake::Direction::kLeft); break;
+            case SDLK_RIGHT:    snaker->SetDir(Snake::Direction::kRight); break;
+            case SDLK_h:        
+                if(update_cnt <= 10)
+                    update_cnt = 10;
+                else
+                    update_cnt-=10; 
+                break;
+            case SDLK_l:
+                if(update_cnt >= 100)
+                    update_cnt = 100;
+                else
+                    update_cnt+=10; 
+                break;
         }
         
-        ret = snaker->Update(food);
-        if(ret == 1)
-            food = map->CreatFood();
-        
-        sleep(1);
+        if(cnt ++ >= update_cnt)
+        {
+            cnt = 0;
+            cout<<"update_cnt:"<<update_cnt << " food:("<<food.x <<","<< food.y << ")"<<endl;
+            ret = snaker->Update(food);
+            if(ret == 1)
+            {
+                CtreatFood(snaker, map);
+            }
+            snaker->Show();
+        }
+        usleep(10*1000);
     }
 }

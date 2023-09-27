@@ -6,12 +6,15 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-    cout << "SDL2 test" << endl;
+    cout << "Snake Game" << endl;
+    cout << "speed++: H\n \
+             speed--: L\n" << endl;
+    
+    cout<< "任意键开始!" << endl;
+    int a;
+    cin >> a;
 
     Game game;
-
     game.run();
-    int a;
-    cin>> a;
     return 0;
 }

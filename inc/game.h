@@ -12,7 +12,9 @@ public:
     Game();
     ~Game();
     void run(void);
+    void CtreatFood(Snake *_snaker, Map *_map);
 private:
+    SDL_Point food;
     Snake *snaker;
     Map *map;
     Input *input;

@@ -6,6 +6,7 @@ using namespace std;
 Snake::Snake(int x, int y)
     : _head_x(x),_head_y(y)
 {
+    cout << "Snake(int x, int y)" << endl;
     SDL_Point p;
     p.x = x;
     p.y = y;
@@ -19,6 +20,7 @@ Snake::Snake(int x, int y)
 Snake::Snake(int x, int y, int map_w, int map_h)
     : _head_x(x),_head_y(y), _map_w(map_w), _map_h(map_h)
 {
+    cout << "Snake(int x, int y, int map_w, int map_h)" << endl;
     SDL_Point p;
     p.x = x;
     p.y = y;
@@ -29,9 +31,18 @@ Snake::Snake(int x, int y, int map_w, int map_h)
     _body.push_back(p);
 }
 
-void Snake::SetDir(int dir)
+void Snake::SetDir(Snake::Direction dir)
 {
-    _dir = dir;
+    switch (_dir)
+    {
+    case Direction::kUp:    if(dir != Direction::kDown)     _dir = dir; break;
+    case Direction::kDown:  if(dir != Direction::kUp)       _dir = dir; break;
+    case Direction::kLeft:  if(dir != Direction::kRight)    _dir = dir; break;
+    case Direction::kRight: if(dir != Direction::kLeft)     _dir = dir; break;
+    default:
+        break;
+    }
+    
 }
 
 bool Snake::IsOnBody(SDL_Point &p)
@@ -54,14 +65,17 @@ int Snake::Update(SDL_Point &food)
 
     switch (_dir)
     {
-    case 0:    p.y -= 1;    break;  // 上
-    case 1:    p.y += 1;    break;  // 下
-    case 2:    p.x -= 1;    break;  // 左
-    case 3:    p.x += 1;    break;  // 右
+    case Direction::kUp:       p.y -= 1;    break;  // 上
+    case Direction::kDown:     p.y += 1;    break;  // 下
+    case Direction::kLeft:     p.x -= 1;    break;  // 左
+    case Direction::kRight:    p.x += 1;    break;  // 右
     default:
         break;
     }
     
+    p.x = fmod(p.x + _map_w, _map_w);
+    p.y = fmod(p.y + _map_h, _map_h);
+
     if(IsOnBody(p))
     {
         alive = false;
@@ -77,12 +91,12 @@ int Snake::Update(SDL_Point &food)
         _food_cnt ++;
     }
     
-    // 检查是否到地图边界
-    if (p.x >= _map_w || p.x < 0
-        || p.y >= _map_h || p.y < 0) {
-        alive = false;
-        return -2;
-    }
+    // // 检查是否到地图边界
+    // if (p.x >= _map_w || p.x < 0
+    //     || p.y >= _map_h || p.y < 0) {
+    //     alive = false;
+    //     return -2;
+    // }
     
     return ret;
 }

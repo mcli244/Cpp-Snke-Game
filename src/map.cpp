@@ -1,5 +1,8 @@
 #include "map.h"
 #include <cmath>
+#include <cstdlib>
+#include <ctime>
+#include <iostream>
 
 Map::Map(int width, int height)
 {
@@ -11,8 +14,12 @@ SDL_Point Map::CreatFood(void)
 {
     SDL_Point food;
 
-    food.x = fmod(0, _width);
-    food.y = fmod(0, _height);
+    srand (time(0));
+
+    std::cout << "_width:" << _width << std::endl;
+    std::cout << "_height:" << _height << std::endl;
+    food.x = rand() % _width;
+    food.y = rand() % _height;
 
     return food;
 }
