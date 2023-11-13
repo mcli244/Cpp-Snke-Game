@@ -8,6 +8,9 @@ public:
 
     void Fill(void);
     void test(void);
+    void DrawPoint(int x, int y, uint32_t color);
+    void Clear(void);
+    void Refresh(void);
 
 private:
     SDL_Window *sdl_window;

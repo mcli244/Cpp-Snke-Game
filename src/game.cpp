@@ -5,7 +5,7 @@ using namespace std;
 
 Game::Game()
 {
-    Renderer *render = new Renderer(200, 200);
+    
     Input *input = new Input();
     // Map *map = new Map(200, 200);
     // Snake *snaker = new Snake(20, 20);
@@ -15,7 +15,6 @@ Game::~Game()
 {
     delete snaker;
     delete map;
-    delete render;
     delete input;
 }
 void Game::CtreatFood(Snake *_snaker, Map *_map)

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "SDL.h"
+#include "renderer.h"
 
 class Snake
 {
@@ -26,6 +27,8 @@ private:
     int _food_cnt;
     Direction _dir = Direction::kUp;
     bool alive; 
+    SDL_Point _food;
+    Renderer *render;
 };
 
 

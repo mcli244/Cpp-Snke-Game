@@ -15,6 +15,8 @@ Snake::Snake(int x, int y)
     alive = true;
     _body.clear();
     _body.push_back(p);
+
+    render = new Renderer(200, 200);
 }
 
 Snake::Snake(int x, int y, int map_w, int map_h)
@@ -29,6 +31,7 @@ Snake::Snake(int x, int y, int map_w, int map_h)
     alive = true;
     _body.clear();
     _body.push_back(p);
+    render = new Renderer(200, 200);
 }
 
 void Snake::SetDir(Snake::Direction dir)
@@ -90,6 +93,8 @@ int Snake::Update(SDL_Point &food)
         ret = 1;
         _food_cnt ++;
     }
+    _food.x = food.x;
+    _food.y = food.y;
     
     // // 检查是否到地图边界
     // if (p.x >= _map_w || p.x < 0
@@ -103,12 +108,13 @@ int Snake::Update(SDL_Point &food)
 
 void Snake::Show(void)
 {
-    cout << "body"<<_body.size() << ":";
+    render->Clear();
+    render->DrawPoint(_food.x, _food.y, 0xff0000);
     for (auto const &item : _body) 
     {
-        cout << "("<< item.x << "," << item.y << ")->";
+        render->DrawPoint(item.x, item.y, 0x00ff00);
     }
-    cout << "end" << endl;
+    render->Refresh();
 }
 
 void Snake::SetMap(int map_w, int map_h)

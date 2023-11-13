@@ -4,7 +4,6 @@
 #include "snake.h"
 #include "map.h"
 #include "input.h"
-#include "renderer.h"
 
 class Game
 {
@@ -18,6 +17,5 @@ private:
     Snake *snaker;
     Map *map;
     Input *input;
-    Renderer *render;
 };
 #endif /*__GAME_H__*/

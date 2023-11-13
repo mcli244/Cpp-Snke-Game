@@ -30,6 +30,7 @@ Renderer::Renderer(int width, int hight)
         cerr << "SDL_CreateRenderer filed" << endl;
         cerr << "sdl err: " << SDL_GetError() << endl;
     }
+    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0x00);
 }
 
 Renderer::~Renderer() {
@@ -44,6 +45,27 @@ void Renderer::Fill(void)
     SDL_RenderPresent(sdl_renderer);
 }
 
+void Renderer::DrawPoint(int x, int y, uint32_t color)
+{
+    uint8_t r, g, b, a;
+
+    SDL_GetRenderDrawColor(sdl_renderer, &r, &g, &b, &a);
+    SDL_SetRenderDrawColor(sdl_renderer, (color>>16)&0xff, (color>>8)&0xff, (color)&0xff, 0x00);
+    // SDL_SetRenderDrawColor(sdl_renderer, 0, 0xff, 0, 0);
+    SDL_RenderDrawPoint(sdl_renderer, x, y);
+    SDL_SetRenderDrawColor(sdl_renderer, r, g, b, a);
+}
+
+void Renderer::Clear(void)
+{
+    SDL_RenderClear(sdl_renderer);
+}
+
+
+void Renderer::Refresh(void)
+{
+    SDL_RenderPresent(sdl_renderer);
+}
 
 void Renderer::test(void)
 {
