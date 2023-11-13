@@ -56,6 +56,22 @@ void Renderer::DrawPoint(int x, int y, uint32_t color)
     SDL_SetRenderDrawColor(sdl_renderer, r, g, b, a);
 }
 
+void Renderer::DrawPoint(int x, int y, uint32_t color, int width)
+{
+    uint8_t r, g, b, a;
+    SDL_Rect rect;
+    rect.x = x;
+    rect.y = y;
+    rect.w = width;
+    rect.h = width;
+
+    SDL_GetRenderDrawColor(sdl_renderer, &r, &g, &b, &a);
+    SDL_SetRenderDrawColor(sdl_renderer, (color>>16)&0xff, (color>>8)&0xff, (color)&0xff, 0x00);
+    // SDL_SetRenderDrawColor(sdl_renderer, 0, 0xff, 0, 0);
+    SDL_RenderFillRect(sdl_renderer, &rect);
+    SDL_SetRenderDrawColor(sdl_renderer, r, g, b, a);
+}
+
 void Renderer::Clear(void)
 {
     SDL_RenderClear(sdl_renderer);

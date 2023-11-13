@@ -33,8 +33,8 @@ void Game::run(void)
     int cnt = 0;
     int update_cnt = 100;
 
-    Map *map = new Map(200, 200);
-    Snake *snaker = new Snake(20, 20, 500, 500);
+    Map *map = new Map(50, 50);
+    Snake *snaker = new Snake(3, 5, 200, 200);
 
     CtreatFood(snaker, map);
     cout << "food:("<<food.x <<","<< food.y << ")"<<endl;

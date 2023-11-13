@@ -9,6 +9,7 @@ public:
     void Fill(void);
     void test(void);
     void DrawPoint(int x, int y, uint32_t color);
+    void DrawPoint(int x, int y, uint32_t color, int width);
     void Clear(void);
     void Refresh(void);
 

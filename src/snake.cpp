@@ -16,7 +16,7 @@ Snake::Snake(int x, int y)
     _body.clear();
     _body.push_back(p);
 
-    render = new Renderer(200, 200);
+    render = new Renderer(1000, 1000);
 }
 
 Snake::Snake(int x, int y, int map_w, int map_h)
@@ -31,7 +31,7 @@ Snake::Snake(int x, int y, int map_w, int map_h)
     alive = true;
     _body.clear();
     _body.push_back(p);
-    render = new Renderer(200, 200);
+    render = new Renderer(map_w, map_h);
 }
 
 void Snake::SetDir(Snake::Direction dir)
@@ -109,10 +109,11 @@ int Snake::Update(SDL_Point &food)
 void Snake::Show(void)
 {
     render->Clear();
-    render->DrawPoint(_food.x, _food.y, 0xff0000);
+    render->DrawPoint(_food.x*8, _food.y*8, 0xff0000);
     for (auto const &item : _body) 
     {
-        render->DrawPoint(item.x, item.y, 0x00ff00);
+        // render->DrawPoint(item.x, item.y, 0x00ff00);
+        render->DrawPoint(item.x*8, item.y*8, 0x00ff00, 8);
     }
     render->Refresh();
 }
