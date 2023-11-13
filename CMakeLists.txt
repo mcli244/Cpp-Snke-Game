@@ -16,7 +16,6 @@ include_directories(${SDL2_INCLUDE_DIRS} inc)
 
 set(SRCS
     main.cpp 
-    src/renderer.cpp
     src/input.cpp
     src/snake.cpp
     src/map.cpp

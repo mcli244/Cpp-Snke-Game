@@ -3,36 +3,28 @@
 
 using namespace std;
 
-Snake::Snake(int x, int y)
+Snake::Snake(int x, int y, Map *map)
     : _head_x(x),_head_y(y)
 {
-    cout << "Snake(int x, int y)" << endl;
-    SDL_Point p;
-    p.x = x;
-    p.y = y;
-
+    _map = map;
     _food_cnt = 0;
     alive = true;
-    _body.clear();
-    _body.push_back(p);
+    _speed = 200;  // 每_speed ms更新一格
 
-    render = new Renderer(1000, 1000);
+    SDL_Point p[3];
+    _body.clear();
+    for(int i=0; i<3; i++)
+    {
+        SDL_Point p;
+        p.x = x;
+        p.y = y+i;
+        _body.push_back(p);
+    }
+    
+    _food = _map->CreatFood();
+    
 }
 
-Snake::Snake(int x, int y, int map_w, int map_h)
-    : _head_x(x),_head_y(y), _map_w(map_w), _map_h(map_h)
-{
-    cout << "Snake(int x, int y, int map_w, int map_h)" << endl;
-    SDL_Point p;
-    p.x = x;
-    p.y = y;
-
-    _food_cnt = 0;
-    alive = true;
-    _body.clear();
-    _body.push_back(p);
-    render = new Renderer(map_w, map_h);
-}
 
 void Snake::SetDir(Snake::Direction dir)
 {
@@ -48,6 +40,11 @@ void Snake::SetDir(Snake::Direction dir)
     
 }
 
+void Snake::SetSpeed(int speed)
+{
+    _speed = speed;
+}
+
 bool Snake::IsOnBody(SDL_Point &p)
 {
     // 检查头是否与身体重合
@@ -61,10 +58,24 @@ bool Snake::IsOnBody(SDL_Point &p)
     return false;
 }
 
-int Snake::Update(SDL_Point &food)
+void Snake::PlaceFood(void)
 {
-    SDL_Point p = _body.front();
+    do{
+        _food = _map->CreatFood();
+    }while(IsOnBody(_food));
+}
+
+int Snake::Update(void)
+{
     int ret = 0;
+
+    uint32_t cur_ticks = _map->GetTicks();
+
+    if(_tick + _speed > cur_ticks) return 1;
+
+    _tick = cur_ticks;
+    SDL_Point p = _body.front();
+    
 
     switch (_dir)
     {
@@ -76,8 +87,8 @@ int Snake::Update(SDL_Point &food)
         break;
     }
     
-    p.x = fmod(p.x + _map_w, _map_w);
-    p.y = fmod(p.y + _map_h, _map_h);
+    p.x = fmod(p.x + _map->GetWidth(), _map->GetWidth());
+    p.y = fmod(p.y + _map->GetHeight(), _map->GetHeight());
 
     if(IsOnBody(p))
     {
@@ -86,45 +97,28 @@ int Snake::Update(SDL_Point &food)
     }
 
     _body.insert(_body.begin(), p);
-    if(p.x != food.x || p.y != food.y)
+    if(p.x != _food.x || p.y != _food.y)
         _body.pop_back();
     else
     {
-        ret = 1;
+        PlaceFood();
         _food_cnt ++;
     }
-    _food.x = food.x;
-    _food.y = food.y;
-    
-    // // 检查是否到地图边界
-    // if (p.x >= _map_w || p.x < 0
-    //     || p.y >= _map_h || p.y < 0) {
-    //     alive = false;
-    //     return -2;
-    // }
     
     return ret;
 }
 
 void Snake::Show(void)
 {
-    render->Clear();
-    render->DrawPoint(_food.x*8, _food.y*8, 0xff0000);
+    if(0 != Update()) return;
+    
+    _map->Clear();
+    _map->DrawPoint(_food.x, _food.y, 0XFF8000);
     for (auto const &item : _body) 
     {
-        // render->DrawPoint(item.x, item.y, 0x00ff00);
-        render->DrawPoint(item.x*8, item.y*8, 0x00ff00, 8);
+        _map->DrawPoint(item.x, item.y, 0xFFFFFF);
     }
-    render->Refresh();
+    _map->Refresh();
 }
 
-void Snake::SetMap(int map_w, int map_h)
-{
-    _map_w = map_w;
-    _map_h = map_h;
-}
-
-bool Snake::IsAlive(void)
-{
-    return alive;
-}
+bool Snake::IsAlive(void) { return alive; } 
