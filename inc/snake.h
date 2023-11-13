@@ -17,12 +17,14 @@ public:
     bool IsOnBody(SDL_Point &p);
     bool IsAlive(void);
     void SetSpeed(int speed);
+    int GetScore(void){return _score;}
+    void Kill(void);
 
 private:
     void PlaceFood(void);
     std::vector<SDL_Point> _body;
     int _head_x, _head_y;
-    int _food_cnt;
+    int _score;
     Direction _dir = Direction::kUp;
     bool alive; 
     SDL_Point _food;

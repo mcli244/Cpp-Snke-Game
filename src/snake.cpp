@@ -7,7 +7,7 @@ Snake::Snake(int x, int y, Map *map)
     : _head_x(x),_head_y(y)
 {
     _map = map;
-    _food_cnt = 0;
+    _score = 0;
     alive = true;
     _speed = 200;  // 每_speed ms更新一格
 
@@ -102,7 +102,7 @@ int Snake::Update(void)
     else
     {
         PlaceFood();
-        _food_cnt ++;
+        _score ++;
     }
     
     return ret;
@@ -122,3 +122,5 @@ void Snake::Show(void)
 }
 
 bool Snake::IsAlive(void) { return alive; } 
+
+void Snake::Kill(void) { alive = false; } 
